@@ -28,8 +28,11 @@
 		 */
 		protected function beforeHtml()
 		{
-			if( empty($this->options['tinymce']) )
+
+			if( empty($this->options['tinymce']) ) {
 				$this->options['tinymce'] = array();
+			}
+
 			if( !isset($this->options['tinymce']['content_css']) ) {
 				$this->options['tinymce']['content_css'] = FACTORY_FORMS_000_URL . '/assets/css/editor.css';
 			}
@@ -44,7 +47,8 @@
 		public function html()
 		{
 			$nameOnForm = $this->getNameOnForm();
-			$value = esc_attr($this->getValue());
+
+			$value = $this->getValue();
 
 			?>
 			<div class='factory-form-wp-editor'>
@@ -56,5 +60,24 @@
 				)); ?>
 			</div>
 		<?php
+		}
+
+		/**
+		 * Returns a submit value of the control by a given name.
+		 *
+		 * @since 1.0.0
+		 * @return mixed
+		 */
+		public function getSubmitValue($name, $subName)
+		{
+			$nameOnForm = $this->getNameOnForm($name);
+			$value = isset($_POST[$nameOnForm])
+				? $_POST[$nameOnForm]
+				: null;
+			if( is_array($value) ) {
+				$value = implode(',', $value);
+			}
+
+			return wp_kses_post($value);
 		}
 	}

@@ -278,12 +278,11 @@
 				<?php foreach($items as $item) {
 
 					$hint = isset($item[2])
-						? esc_attr($item[2])
+						? $item[2]
 						: null;
 					$hint = isset($item['hint'])
-						? esc_attr($item['hint'])
+						? $item['hint']
 						: null;
-
 					$value = isset($item[0])
 						? esc_attr($item[0])
 						: null;

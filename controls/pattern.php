@@ -26,8 +26,10 @@
 		{
 			parent::__construct($options, $form, $provider);
 
-			if( !isset($options['color']) )
+			if( !isset($options['color']) ) {
 				$options['color'] = array();
+			}
+
 			$options['color'] = array_merge($options['color'], array(
 				'name' => $this->options['name'] . '_color_picker',
 				'default' => isset($this->options['default'])
@@ -35,8 +37,10 @@
 					: null,
 				'pickerTarget' => '.factory-control-' . $this->options['name'] . ' .factory-picker-target'
 			));
-			if( !$options['color']['default'] )
+
+			if( !$options['color']['default'] ) {
 				$options['color']['default'] = '#1e8cbe';
+			}
 
 			$name = $this->getOption('name');
 
@@ -74,8 +78,10 @@
 			}
 
 			$hasColor = !empty($values['color']);
-			if( $hasColor )
+
+			if( $hasColor ) {
 				$this->addCssClass('factory-color-panel-active');
+			}
 
 			?>
 			<div <?php $this->attrs() ?>>
@@ -83,7 +89,7 @@
 					<div class="factory-preview-wrap">
 						<div <?php echo (!empty($values['url']))
 							? 'style="background:url(' . esc_url($values['url']) . ') repeat; border:0; font-size:0;"'
-							: ''; ?> class="factory-preview <?php echo $name; ?>"><span></span></div>
+							: ''; ?> class="factory-preview <?php echo $this->getOption('name'); ?>"><span></span></div>
 					</div>
 					<a href="#" class="button button-default factory-button factory-change-color-btn <?php if( $hasColor ) {
 						echo 'button-active';

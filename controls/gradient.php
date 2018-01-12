@@ -35,7 +35,9 @@
 			$value = esc_attr($this->getValue());
 
 			if( !empty($value) ) {
-				$values = json_decode(stripcslashes($value));
+
+				$values = json_decode(stripcslashes(htmlspecialchars_decode($value)));
+
 				$points = '';
 
 				foreach($values->color_points as $splitVlaues) {
@@ -43,6 +45,7 @@
 				}
 
 				$points = rtrim($points, ',');
+
 				$this->addHtmlData('points', $points);
 				$this->addHtmlData('directions', $values->filldirection);
 			} else {

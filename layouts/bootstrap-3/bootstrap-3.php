@@ -95,8 +95,8 @@
 						if( $hintType == 'icon' ): ?>
 							<?php $hintIconColor = $control->getLayoutOption('hint-icon-color', 'green'); ?>
 							<span class="factory-hint-icon factory-hint-icon-<?= $hintIconColor ?>" data-toggle="factory-tooltip" data-placement="right" title="<?php $control->hint(true) ?>">
-							<!--<i class="fa fa-question" aria-hidden="true"></i>-->
 							<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAQAAABKmM6bAAAAUUlEQVQIHU3BsQ1AQABA0X/komIrnQHYwyhqQ1hBo9KZRKL9CBfeAwy2ri42JA4mPQ9rJ6OVt0BisFM3Po7qbEliru7m/FkY+TN64ZVxEzh4ndrMN7+Z+jXCAAAAAElFTkSuQmCC" alt=""/>
+
 						</span>
 						<?php endif; ?>
 						<?php if( $control->getLayoutOption('hint-position', 'bottom') == 'left' ): ?>
