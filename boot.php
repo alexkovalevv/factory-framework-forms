@@ -120,6 +120,16 @@
 					'include' => FACTORY_FORMS_000_DIR . '/controls/textbox.php'
 				),
 				array(
+					'type' => 'multiple-textbox',
+					'class' => 'FactoryForms000_MultipleTextboxControl',
+					'include' => FACTORY_FORMS_000_DIR . '/controls/multiple-textbox.php'
+				),
+				array(
+					'type' => 'datetimepicker-range',
+					'class' => 'FactoryForms000_DatepickerRangeControl',
+					'include' => FACTORY_FORMS_000_DIR . '/controls/datepicker-range.php'
+				),
+				array(
 					'type' => 'url',
 					'class' => 'FactoryForms000_UrlControl',
 					'include' => FACTORY_FORMS_000_DIR . '/controls/url.php'
