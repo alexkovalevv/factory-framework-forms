@@ -354,6 +354,17 @@
 		}
 
 		/**
+		 * Returns a form name
+		 *
+		 * @since 1.0.0
+		 * @return string
+		 */
+		public function getFormName()
+		{
+			return $this->form->name;
+		}
+
+		/**
 		 * Returns an element type.
 		 *
 		 * @since 1.0.0
