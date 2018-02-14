@@ -1,85 +1,99 @@
 <?php
-/**
- * The file contains the class of Columns Holder.
- * 
- * @author Paul Kashtanoff <paul@byonepress.com>
- * @copyright (c) 2014, OnePress Ltd
- * 
- * @package factory-forms 
- * @since 1.0.0
- */
+	/**
+	 * The file contains the class of Columns Holder.
+	 *
+	 * @author Alex Kovalev <alex.kovalevv@gmail.com>
+	 * @copyright (c) 2018, Webcraftic Ltd
+	 *
+	 * @package factory-forms
+	 * @since 1.0.0
+	 */
 
-/**
- * Columns Holder
- * 
- * @since 1.0.0
- */
-class FactoryForms000_ColumnsHolder extends FactoryForms000_Holder {
-    
-    /**
-     * A holder type.
-     * 
-     * @since 1.0.0
-     * @var string
-     */
-    public $type = 'columns';
-        
-    public function __construct($options, $form) {
-        $columnsItems = array();
-        
-        $items = isset( $options['items'] ) ? $options['items'] : array();
-        
-        // calculates the number of columns
-        
-        $this->columnsCount = 0;
-        
-        foreach( $options['items'] as $item ) {
-            $i = ( !isset( $item['column'] ) ? 1 : intval( $item['column'] ) ) - 1;
-            $columnsItems[$i][] = $item;
-            
-            if ( $i > $this->columnsCount ) $this->columnsCount = $i + 1;
-        }
-        // calculates the number of rows
+	// Exit if accessed directly
+	if( !defined('ABSPATH') ) {
+		exit;
+	}
 
-        $this->rowsCount = 0;
-        foreach($columnsItems as $items) {
-            $count = count( $items );
-            if ( $count > $this->rowsCount ) $this->rowsCount = $count;
-        } 
-        
-        // creates elements
-        
-        parent::__construct($options, $form);
-        
-        // groups the created by columns
-        
-        $elementIndex = 0;
-        $this->columns = array();
+	if( !class_exists('Wbcr_FactoryForms000_ColumnsHolder') ) {
+		/**
+		 * Columns Holder
+		 *
+		 * @since 1.0.0
+		 */
+		class Wbcr_FactoryForms000_ColumnsHolder extends Wbcr_FactoryForms000_Holder {
 
-        foreach($columnsItems as $columnIndex => $columnItems) {
-            $count = count ( $columnItems );
-            for ( $k = 0; $k < $count; $k++ ) {
-                $this->columns[$columnIndex][] = $this->elements[$elementIndex];
-                $elementIndex++;
-            }
-        }
-    }
-    
-    public function render() {
-        $this->beforeRendering();
+			/**
+			 * A holder type.
+			 *
+			 * @since 1.0.0
+			 * @var string
+			 */
+			public $type = 'columns';
 
-        for( $n = 0; $n < $this->rowsCount; $n++ ) {
+			public function __construct($options, $form)
+			{
+				$columns_items = array();
 
-            $this->form->layout->startRow( $n, $this->rowsCount );
-            
-            for( $i = 0; $i < $this->columnsCount; $i++ ) {
-                $control = $this->columns[$i][$n];
-                $this->form->layout->startColumn( $control, $i, $this->columnsCount );
-                $this->columns[$i][$n]->render();
-                $this->form->layout->endColumn( $control, $i, $this->columnsCount );    
-            }
+				// calculates the number of columns
 
-            $this->form->layout->endRow( $n, $this->rowsCount ); 
-        }
-    }
-}
+				$this->columns_count = 0;
+
+				foreach($options['items'] as $item) {
+					$i = (!isset($item['column'])
+							? 1
+							: intval($item['column'])) - 1;
+					$columns_items[$i][] = $item;
+
+					if( $i > $this->columns_count ) {
+						$this->columns_count = $i + 1;
+					}
+				}
+				// calculates the number of rows
+
+				$this->rows_count = 0;
+				foreach($columns_items as $items) {
+					$count = count($items);
+					if( $count > $this->rows_count ) {
+						$this->rows_count = $count;
+					}
+				}
+
+				// creates elements
+
+				parent::__construct($options, $form);
+
+				// groups the created by columns
+
+				$element_index = 0;
+				$this->columns = array();
+
+				foreach($columns_items as $column_index => $columnItems) {
+					$count = count($columnItems);
+					for($k = 0; $k < $count; $k++) {
+						$this->columns[$column_index][] = $this->elements[$element_index];
+						$element_index++;
+					}
+				}
+			}
+
+
+			public function render()
+			{
+				$this->beforeRendering();
+
+				for($n = 0; $n < $this->rows_count; $n++) {
+
+					$this->form->layout->startRow($n, $this->rows_count);
+
+					for($i = 0; $i < $this->columns_count; $i++) {
+						$control = $this->columns[$i][$n];
+						$this->form->layout->startColumn($control, $i, $this->columns_count);
+						$this->columns[$i][$n]->render();
+						$this->form->layout->endColumn($control, $i, $this->columns_count);
+					}
+
+					$this->form->layout->endRow($n, $this->rows_count);
+				}
+			}
+		}
+	}

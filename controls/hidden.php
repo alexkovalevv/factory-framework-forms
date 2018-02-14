@@ -8,34 +8,43 @@
 	 *  value           => a value to show in the control
 	 *  default         => a default value of the control if the "value" option is not specified
 	 *
-	 * @author Paul Kashtanoff <paul@byonepress.com>
-	 * @copyright (c) 2013, OnePress Ltd
+	 * @author Alex Kovalev <alex.kovalevv@gmail.com>
+	 * @copyright (c) 2018, Webcraftic Ltd
 	 *
 	 * @package factory-forms
 	 * @since 1.0.0
 	 */
-	class FactoryForms000_HiddenControl extends FactoryForms000_Control {
 
-		public $type = 'hidden';
+	// Exit if accessed directly
+	if( !defined('ABSPATH') ) {
+		exit;
+	}
 
-		/**
-		 * Shows the html markup of the control.
-		 *
-		 * @since 1.0.0
-		 * @return void
-		 */
-		public function html()
-		{
-			$value = esc_attr($this->getValue());
-			$nameOnForm = $this->getNameOnForm();
+	if( !class_exists('Wbcr_FactoryForms000_HiddenControl') ) {
 
-			$this->addHtmlAttr('id', $nameOnForm);
-			$this->addHtmlAttr('name', $nameOnForm);
-			$this->addHtmlAttr('value', $value);
-			$this->addHtmlAttr('type', 'hidden');
+		class Wbcr_FactoryForms000_HiddenControl extends Wbcr_FactoryForms000_Control {
 
-			?>
-			<input <?php $this->attrs() ?>/>
-		<?php
+			public $type = 'hidden';
+
+			/**
+			 * Shows the html markup of the control.
+			 *
+			 * @since 1.0.0
+			 * @return void
+			 */
+			public function html()
+			{
+				$value = esc_attr($this->getValue());
+				$name_on_form = $this->getNameOnForm();
+
+				$this->addHtmlAttr('id', $name_on_form);
+				$this->addHtmlAttr('name', $name_on_form);
+				$this->addHtmlAttr('value', $value);
+				$this->addHtmlAttr('type', 'hidden');
+
+				?>
+				<input <?php $this->attrs() ?>/>
+			<?php
+			}
 		}
 	}

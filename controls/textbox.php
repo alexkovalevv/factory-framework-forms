@@ -17,67 +17,76 @@
 	 * 'data-date-autoclose' => 'true'
 	 * )
 	 *
-	 * @author Paul Kashtanoff <paul@byonepress.com>
-	 * @copyright (c) 2013, OnePress Ltd
+	 * @author Alex Kovalev <alex.kovalevv@gmail.com>
+	 * @copyright (c) 2018, Webcraftic Ltd
 	 *
 	 * @package factory-forms
 	 * @since 1.0.0
 	 */
-	class FactoryForms000_TextboxControl extends FactoryForms000_Control {
 
-		public $type = 'textbox';
+	// Exit if accessed directly
+	if( !defined('ABSPATH') ) {
+		exit;
+	}
 
-		/**
-		 * Preparing html attributes before rendering html of the control.
-		 *
-		 * @since 1.0.0
-		 * @return void
-		 */
-		protected function beforeHtml()
-		{
-			$value = esc_attr($this->getValue());
-			$nameOnForm = $this->getNameOnForm();
+	if( !class_exists('Wbcr_FactoryForms000_TextboxControl') ) {
 
-			if( $this->getOption('maxLength', false) ) {
-				$this->addHtmlAttr('maxlength', intval($this->getOption('maxLength')));
+		class Wbcr_FactoryForms000_TextboxControl extends Wbcr_FactoryForms000_Control {
+
+			public $type = 'textbox';
+
+			/**
+			 * Preparing html attributes before rendering html of the control.
+			 *
+			 * @since 1.0.0
+			 * @return void
+			 */
+			protected function beforeHtml()
+			{
+				$value = esc_attr($this->getValue());
+				$name_on_form = $this->getNameOnForm();
+
+				if( $this->getOption('maxLength', false) ) {
+					$this->addHtmlAttr('maxlength', intval($this->getOption('maxLength')));
+				}
+
+				if( $this->getOption('placeholder', false) ) {
+					$this->addHtmlAttr('placeholder', $this->getOption('placeholder'));
+				}
+
+				$this->addCssClass('form-control');
+				$this->addHtmlAttr('type', 'text');
+				$this->addHtmlAttr('id', $name_on_form);
+				$this->addHtmlAttr('name', $name_on_form);
+				$this->addHtmlAttr('value', $value);
 			}
 
-			if( $this->getOption('placeholder', false) ) {
-				$this->addHtmlAttr('placeholder', $this->getOption('placeholder'));
+			/**
+			 * Shows the html markup of the control.
+			 *
+			 * @since 1.0.0
+			 * @return void
+			 */
+			public function html()
+			{
+				$units = $this->getOption('units', false);
+				?>
+				<?php if( $units ) { ?><div class="input-group"><?php } ?>
+				<input <?php $this->attrs() ?>/>
+				<?php if( $units ) { ?>
+				<span class="input-group-addon"><?php echo $units; ?></span>
+			<?php } ?>
+				<?php if( $units ) { ?></div><?php } ?>
+			<?php
 			}
 
-			$this->addCssClass('form-control');
-			$this->addHtmlAttr('type', 'text');
-			$this->addHtmlAttr('id', $nameOnForm);
-			$this->addHtmlAttr('name', $nameOnForm);
-			$this->addHtmlAttr('value', $value);
-		}
+			public function getSubmitValue($name, $subName)
+			{
+				$name_on_form = $this->getNameOnForm($name);
 
-		/**
-		 * Shows the html markup of the control.
-		 *
-		 * @since 1.0.0
-		 * @return void
-		 */
-		public function html()
-		{
-			$units = $this->getOption('units', false);
-			?>
-			<?php if( $units ) { ?><div class="input-group"><?php } ?>
-			<input <?php $this->attrs() ?>/>
-			<?php if( $units ) { ?>
-			<span class="input-group-addon"><?php echo $units; ?></span>
-		<?php } ?>
-			<?php if( $units ) { ?></div><?php } ?>
-		<?php
-		}
-
-		public function getSubmitValue($name, $subName)
-		{
-			$nameOnForm = $this->getNameOnForm($name);
-
-			return isset($_POST[$nameOnForm])
-				? sanitize_text_field($_POST[$nameOnForm])
-				: '';
+				return isset($_POST[$name_on_form])
+					? sanitize_text_field($_POST[$name_on_form])
+					: '';
+			}
 		}
 	}

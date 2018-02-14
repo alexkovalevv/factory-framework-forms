@@ -6,28 +6,38 @@
 	 * Main options:
 	 * @see FactoryForms000_TextboxControl
 	 *
-	 * @author Paul Kashtanoff <paul@byonepress.com>
-	 * @copyright (c) 2013, OnePress Ltd
+	 * @author Alex Kovalev <alex.kovalevv@gmail.com>
+	 * @copyright (c) 2018, Webcraftic Ltd
 	 *
 	 * @package factory-forms
 	 * @since 1.0.0
 	 */
-	class FactoryForms000_UrlControl extends FactoryForms000_TextboxControl {
 
-		public $type = 'url';
+	// Exit if accessed directly
+	if( !defined('ABSPATH') ) {
+		exit;
+	}
 
-		/**
-		 * Adding 'http://' to the url if it was missed.
-		 *
-		 * @since 1.0.0
-		 * @return string
-		 */
-		public function getSubmitValue($name, $subName)
-		{
-			$value = parent::getSubmitValue($name, $subName);
-			if( !empty($value) && substr($value, 0, 4) != 'http' )
-				$value = 'http://' . $value;
+	if( !class_exists('Wbcr_FactoryForms000_UrlControl') ) {
 
-			return $value;
+		class Wbcr_FactoryForms000_UrlControl extends Wbcr_FactoryForms000_TextboxControl {
+
+			public $type = 'url';
+
+			/**
+			 * Adding 'http://' to the url if it was missed.
+			 *
+			 * @since 1.0.0
+			 * @return string
+			 */
+			public function getSubmitValue($name, $sub_name)
+			{
+				$value = parent::getSubmitValue($name, $sub_name);
+				if( !empty($value) && substr($value, 0, 4) != 'http' ) {
+					$value = 'http://' . $value;
+				}
+
+				return $value;
+			}
 		}
 	}

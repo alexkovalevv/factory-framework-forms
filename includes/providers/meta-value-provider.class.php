@@ -1,228 +1,293 @@
 <?php
-/**
- * The file contains the class of Factory Meta Value Provider.
- *
- * @author Paul Kashtanoff <paul@byonepress.com>
- * @copyright (c) 2013, OnePress Ltd
- *
- * @package factory-forms
- * @since 1.0.0
- */
+	/**
+	 * The file contains the class of Factory Meta Value Provider.
+	 *
+	 * @author Alex Kovalev <alex.kovalevv@gmail.com>
+	 * @copyright (c) 2018, Webcraftic Ltd
+	 *
+	 * @package factory-forms
+	 * @since 1.0.0
+	 */
 
-/**
- * Factory Meta Value Provider
- *
- * This provide works with meta values like a lazy key-value storage and
- * provides methods to commit changes on demand. It increases perfomance on form saving.
- *
- * @since 1.0.0
- */
-class FactoryForms000_MetaValueProvider implements IFactoryForms000_ValueProvider
-{
-    /**
-     * Values to save $metaName => $metaValue
-     * @var array
-     */
-    private $values = array();
+	// Exit if accessed directly
+	if( !defined('ABSPATH') ) {
+		exit;
+	}
 
-    /**
-     * Chanched meta keys (indexed array)
-     * @var array
-     */
-    private $keys = array();
+	if( !class_exists('Wbcr_FactoryForms000_OptionsValueProvider') ) {
 
-    private $meta = array();
-    public $scope;
+		/**
+		 * Factory Meta Value Provider
+		 *
+		 * This provide works with meta values like a lazy key-value storage and
+		 * provides methods to commit changes on demand. It increases perfomance on form saving.
+		 *
+		 * @since 1.0.0
+		 */
+		class Wbcr_FactoryForms000_MetaValueProvider implements Wbcr_IFactoryForms000_ValueProvider {
 
-    /**
-     * Creates a new instance of a meta value provider.
-     *
-     * @global type $post
-     * @param type $options
-     */
-    public function __construct( $options = array() ) {
-        global $post;
+			/**
+			 * Values to save $metaName => $metaValue
+			 * @var array
+			 */
+			private $values = array();
 
-        $this->scope = ( isset( $options['scope'] ) ) ? $options['scope'] : null;
-        $this->scope = preg_replace('/\_meta\_box$/', '', $this->formatCamelCase( $this->scope ) );
+			/**
+			 * Chanched meta keys (indexed array)
+			 * @var array
+			 */
+			private $keys = array();
 
-        $this->postId = ( isset( $options['postId'] ) ) ? $options['postId'] : $post->ID;
+			private $meta = array();
 
-        // the second parameter for compatibility with wordpress 3.0
-        $temp = get_post_meta( $this->postId, '' );
+			public $scope;
 
-        foreach($temp as $key => &$content) {
-            if ( strpos( $key, $this->scope ) === 0 ) {
-                $this->meta[$key] = $content;
-            }
-        }
-    }
+			/**
+			 * Creates a new instance of a meta value provider.
+			 *
+			 * @param array $options
+			 */
+			public function __construct($options = array())
+			{
+				global $post;
 
-    /**
-     * Initizalize an instance of the provider.
-     * This method should be invoked before the provider usage.
-     *
-     * @param type $scope       Scope is prefix that is added to all meta keys.
-     * @param type $postId      Post id we will use meta data or empty for current post.
-     */
-    public function init( $postId = false ) {
-        global $post;
+				$this->scope = (isset($options['scope']))
+					? $options['scope']
+					: null;
 
-        $this->postId = $postId ? $postId : $post->ID;
+				$this->scope = preg_replace('/\_meta\_box$/', '', $this->formatCamelCase($this->scope));
 
-        // the second parameter for compatibility with wordpress 3.0
-        $temp = get_post_meta( $this->postId, '' );
-        foreach($temp as $key => &$content) {
-            if ( strpos( $key, $this->scope ) === 0 ) {
-                $this->meta[$key] = $content;
-            }
-        }
-    }
+				$this->post_id = (isset($options['postId']))
+					? $options['postId']
+					: $post->ID;
 
-    /**
-     * Saves changes into a database.
-     * The method is optimized for bulk updates.
-     */
-    public function saveChanges() {
+				// the second parameter for compatibility with wordpress 3.0
+				$temp = get_post_meta($this->post_id, '');
 
+				foreach($temp as $key => &$content) {
+					if( strpos($key, $this->scope) === 0 ) {
+						$this->meta[$key] = $content;
+					}
+				}
+			}
 
-        $this->deleteValues();
-        $this->insertValues();
+			/**
+			 * Initizalize an instance of the provider.
+			 * This method should be invoked before the provider usage.
+			 *
+			 * @param bool $postId
+			 */
+			public function init($postId = false)
+			{
+				global $post;
 
-        /**
-        foreach ($this->values as $key => $value) {
-            update_post_meta($this->postId, $key, $value);
-        }
-         */
-    }
+				$this->post_id = $postId
+					? $postId
+					: $post->ID;
 
-    /**
-     * Removes all actual values from a database.
-     */
-    private function deleteValues() {
-        if ( count( $this->keys ) == 0 ) return;
+				// the second parameter for compatibility with wordpress 3.0
+				$temp = get_post_meta($this->post_id, '');
+				foreach($temp as $key => &$content) {
+					if( strpos($key, $this->scope) === 0 ) {
+						$this->meta[$key] = $content;
+					}
+				}
+			}
 
-        global $wpdb;
+			/**
+			 * Saves changes into a database.
+			 * The method is optimized for bulk updates.
+			 */
+			public function saveChanges()
+			{
 
-        $keys = array();
-        for($i = 0; $i < count($this->keys); $i++) {
-            $keys[] = '\'' . $this->keys[$i] . '\'';
-        }
+				$this->deleteValues();
+				$this->insertValues();
+				/**
+				 * foreach ($this->values as $key => $value) {
+				 * update_post_meta($this->postId, $key, $value);
+				 * }
+				 */
+			}
 
-        $clause = implode( ',', $keys );
-        $wpdb->query("DELETE FROM {$wpdb->postmeta} WHERE post_id={$this->postId} AND meta_key IN ($clause)");
-    }
+			/**
+			 * Removes all actual values from a database.
+			 */
+			private function deleteValues()
+			{
+				if( count($this->keys) == 0 ) {
+					return;
+				}
 
-    /**
-     * Inserts new values by using bulk insert directly into a database.
-     */
-    private function insertValues() {
-        global $wpdb;
+				global $wpdb;
 
-        $sql = "INSERT INTO {$wpdb->postmeta} (post_id, meta_key, meta_value) VALUES ";
-        $rows = array();
+				$keys = array();
+				for($i = 0; $i < count($this->keys); $i++) {
+					$keys[] = '\'' . $this->keys[$i] . '\'';
+				}
 
-        foreach($this->values as $metaKey=>$metaValue) {
-            if ( is_array( $metaValue ) ) {
-                foreach( $metaValue as $value ) {
-                    $rows[] = $wpdb->prepare( '(%d,%s,%s)' , $this->postId, $metaKey, $value );
-                }
-            } else {
-                $rows[] = $wpdb->prepare( '(%d,%s,%s)' , $this->postId, $metaKey, $metaValue );
-            }
-        }
+				$clause = implode(',', $keys);
+				$wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->postmeta} WHERE post_id='%d' AND meta_key IN (%s)", $this->post_id, $clause));
+			}
 
-	    if( empty($rows) ) {
-		    return;
-	    }
+			/**
+			 * /**
+			 * Inserts new values by using bulk insert directly into a database.
+			 *
+			 * @return bool|false|int
+			 */
+			private function insertValues()
+			{
+				global $wpdb;
 
-        $sql = $sql . implode( ',', $rows );
-        $wpdb->query($sql);
-    }
+				$sql = "INSERT INTO {$wpdb->postmeta} (post_id, meta_key, meta_value) VALUES ";
+				$rows = array();
 
-    public function getValue($name, $default = null, $multiple = false ) {
+				foreach($this->values as $meta_key => $meta_value) {
+					if( is_array($meta_value) ) {
+						foreach($meta_value as $value) {
+							$rows[] = $wpdb->prepare('(%d,%s,%s)', $this->post_id, $meta_key, $value);
+						}
+					} else {
+						$rows[] = $wpdb->prepare('(%d,%s,%s)', $this->post_id, $meta_key, $meta_value);
+					}
+				}
 
-        if ( is_array( $name ) ) {
+				if( empty($rows) ) {
+					return false;
+				}
 
-            $values = array();
-            $index = 0;
+				$sql = $sql . implode(',', $rows);
 
-            foreach($name as $item) {
-                $itemDefault = ( $default && is_array($default) && isset($default[$index]) )
-                                    ? $default[$index] : null;
+				return $wpdb->query($sql);
+			}
 
-                $values[] = $this->getValueBySingleName($item, $itemDefault, $multiple);
-                $index++;
-            }
-            return $values;
-        }
+			/**
+			 * @param string $name
+			 * @param null $default
+			 * @param bool $multiple
+			 * @return array|int|null
+			 */
+			public function getValue($name, $default = null, $multiple = false)
+			{
+				if( is_array($name) ) {
 
-        $value = $this->getValueBySingleName($name, $default, $multiple);
-        return $value;
-    }
+					$values = array();
+					$index = 0;
 
-    protected function getValueBySingleName( $singleName, $default = null, $multiple = false ) {
+					foreach($name as $item) {
+						$item_default = ($default && is_array($default) && isset($default[$index]))
+							? $default[$index]
+							: null;
 
-        $value = isset( $this->meta[$this->scope . '_' . $singleName] )
-                ? ( $multiple ) ? $this->meta[$this->scope . '_' . $singleName] : $this->meta[$this->scope . '_' . $singleName][0]
-                : $default;
+						$values[] = $this->getValueBySingleName($item, $item_default, $multiple);
+						$index++;
+					}
 
-        if ($value === 'true') $value = 1;
-        if ($value === 'false') $value = 0;
+					return $values;
+				}
 
-        return $value;
-    }
+				$value = $this->getValueBySingleName($name, $default, $multiple);
 
-    public function setValue($name, $value) {
+				return $value;
+			}
 
-        if ( is_array( $name ) ) {
-            $index = 0;
+			/**
+			 * @param $single_name
+			 * @param null $default
+			 * @param bool $multiple
+			 * @return int|null
+			 */
+			protected function getValueBySingleName($single_name, $default = null, $multiple = false)
+			{
 
-            foreach($name as $item) {
-                $itemValue = ( $value && is_array($value) && isset($value[$index]) )
-                                    ? $value[$index] : null;
+				$value = isset($this->meta[$this->scope . '_' . $single_name])
+					? ($multiple)
+						? $this->meta[$this->scope . '_' . $single_name]
+						: $this->meta[$this->scope . '_' . $single_name][0]
+					: $default;
 
-                $this->setValueBySingleName($item, $itemValue);
-                $index++;
-            }
+				if( $value === 'true' ) {
+					$value = 1;
+				}
+				if( $value === 'false' ) {
+					$value = 0;
+				}
 
-            return;
-        }
+				return $value;
+			}
 
-        $this->setValueBySingleName($name, $value);
-        return;
-    }
+			/**
+			 * @param string $name
+			 * @param mixed $value
+			 */
+			public function setValue($name, $value)
+			{
 
-    protected function setValueBySingleName( $singleName, $singeValue ) {
-        $name = $this->scope . '_' . $singleName;
+				if( is_array($name) ) {
+					$index = 0;
 
-        if ( is_array( $singeValue ) ) {
+					foreach($name as $item) {
+						$itemValue = ($value && is_array($value) && isset($value[$index]))
+							? $value[$index]
+							: null;
 
-            foreach ($singeValue as $index => $value) {
+						$this->setValueBySingleName($item, $itemValue);
+						$index++;
+					}
 
-                $singeValue[$index] = empty( $singeValue[$index] )
-                    ? $singeValue[$index]
-                    : stripslashes ( $singeValue[$index] );
-            }
+					return;
+				}
 
-            $value = $singeValue;
-        } else {
-            $value = empty( $singeValue ) ? $singeValue : stripslashes ( $singeValue );
-        }
+				$this->setValueBySingleName($name, $value);
 
-        $this->values[$name] = $value;
-        $this->keys[] = $name;
-    }
+				return;
+			}
 
-    private function formatCamelCase( $string ) {
-        $output = "";
-        foreach( str_split( $string ) as $char ) {
-            if ( strtoupper( $char ) == $char && !in_array($char, array('_', '-'))) {
-                $output .= "_";
-            }
-            $output .= $char;
-        }
-        $output = strtolower($output);
-        return $output;
-    }
-}
+			/**
+			 * @param string $single_name
+			 * @param mixed $singe_value
+			 */
+			protected function setValueBySingleName($single_name, $singe_value)
+			{
+				$name = $this->scope . '_' . $single_name;
+
+				if( is_array($singe_value) ) {
+
+					foreach($singe_value as $index => $value) {
+
+						$singe_value[$index] = empty($singe_value[$index])
+							? $singe_value[$index]
+							: stripslashes($singe_value[$index]);
+					}
+
+					$value = $singe_value;
+				} else {
+					$value = empty($singe_value)
+						? $singe_value
+						: stripslashes($singe_value);
+				}
+
+				$this->values[$name] = $value;
+				$this->keys[] = $name;
+			}
+
+			/**
+			 * @param string $string
+			 * @return string
+			 */
+			private function formatCamelCase($string)
+			{
+				$output = "";
+				foreach(str_split($string) as $char) {
+					if( strtoupper($char) == $char && !in_array($char, array('_', '-')) ) {
+						$output .= "_";
+					}
+					$output .= $char;
+				}
+				$output = strtolower($output);
+
+				return $output;
+			}
+		}
+	}

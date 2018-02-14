@@ -1,37 +1,45 @@
 <?php
-
 	/**
 	 * Html Markup
 	 *
-	 * @author Paul Kashtanoff <paul@byonepress.com>
-	 * @copyright (c) 2013, OnePress Ltd
+	 * @author Alex Kovalev <alex.kovalevv@gmail.com>
+	 * @copyright (c) 2018, Webcraftic Ltd
 	 *
 	 * @package factory-forms
 	 * @since 1.0.0
 	 */
-	class FactoryForms000_Html extends FactoryForms000_CustomElement {
 
-		public $type = 'html';
+	// Exit if accessed directly
+	if( !defined('ABSPATH') ) {
+		exit;
+	}
 
-		/**
-		 * Shows the html markup of the element.
-		 *
-		 * @since 1.0.0
-		 * @return void
-		 */
-		public function html()
-		{
-			$html = $this->getOption('html', '');
+	if( !class_exists('Wbcr_FactoryForms000_Html') ) {
 
-			// if the data options is a valid callback for an object method
-			if( (is_array($html) && count($html) == 2 && gettype($html[0]) == 'object') || function_exists($html) ) {
+		class Wbcr_FactoryForms000_Html extends Wbcr_FactoryForms000_CustomElement {
 
-				call_user_func($html, $this);
+			public $type = 'html';
 
-				return;
+			/**
+			 * Shows the html markup of the element.
+			 *
+			 * @since 1.0.0
+			 * @return void
+			 */
+			public function html()
+			{
+				$html = $this->getOption('html', '');
+
+				// if the data options is a valid callback for an object method
+				if( (is_array($html) && count($html) == 2 && gettype($html[0]) == 'object') || function_exists($html) ) {
+
+					call_user_func($html, $this);
+
+					return;
+				}
+
+				// if the data options is an array of values
+				echo $html;
 			}
-
-			// if the data options is an array of values
-			echo $html;
 		}
 	}

@@ -1,149 +1,170 @@
 <?php
-/**
- * The file contains the base class for all control holder
- * 
- * @author Paul Kashtanoff <paul@byonepress.com>
- * @copyright (c) 2013, OnePress Ltd
- * 
- * @package factory-forms 
- * @since 1.0.0
- */
+	/**
+	 * The file contains the base class for all control holder
+	 *
+	 * @author Alex Kovalev <alex.kovalevv@gmail.com>
+	 * @copyright (c) 2018, Webcraftic Ltd
+	 *
+	 * @package factory-forms
+	 * @since 1.0.0
+	 */
 
-/**
- * The base class for control holders.
- * 
- * @since 1.0.0
- */
-abstract class FactoryForms000_Holder extends FactoryForms000_FormElement {
-    
-    /**
-     * Holder Elements.
-     * 
-     * @since 1.0.0
-     * @var FactoryForms000_FormElement[] 
-     */
-    protected $elements = array();
-    
-    /**
-     * Is this element a control holder?
-     * 
-     * @since 1.0.0
-     * @var bool 
-     */
-    public $isHolder = true;
-    
-    /**
-     * Creates a new instance of control holder.
-     * 
-     * @since 1.0.0
-     * @param mixed[] $options A holder options.
-     * @param FactoryForms000_Form $form A parent form.
-     */
-    public function __construct($options, $form) {
-        parent::__construct($options, $form);        
-        $this->elements = $form->createElements( $options['items'] );
-    }
-    
-    /**
-     * Returns holder elements.
-     * 
-     * @since 1.0.0
-     * @return FactoryForms000_FormElement[].
-     */
-    public function getElements() {
-        return $this->elements;
-    }
-    
-    /**
-     * Renders the form or a given control holder.
-     * 
-     * @since 1.0.0
-     * @param $holder A control holder to render.
-     * @return void
-     */
-    function render() {
-        
-        $this->beforeRendering();
-        
-        $isFirstItem = true;
+	// Exit if accessed directly
+	if( !defined('ABSPATH') ) {
+		exit;
+	}
 
-        foreach( $this->elements as $element ) {
-            $element->setOption('isFirst', $isFirstItem);
-            if ( $isFirstItem ) $isFirstItem = false;
+	if( !class_exists('Wbcr_FactoryForms000_Holder') ) {
 
-            do_action('factory_form_before_element_' . $element->getOption('name') );
-            
-            // if a current item is a control holder
-            if ( $element->isHolder ) {
-                
-                $this->form->layout->beforeHolder( $element );
-                $element->render();
-                $this->form->layout->afterHolder( $element );
-                
-            // if a current item is an input control
-            } elseif ( $element->isControl ) {
-                
-                $this->form->layout->beforeControl( $element );
-                $element->render();
-                $this->form->layout->afterControl( $element );
-                
-            // if a current item is a custom form element
-            } elseif ( $element->isCustom ) {
-                
-                $element->render();    
-                
-            // otherwise, show the error
-            } else {
-                print_r($element);
-                echo( '[ERROR] Invalid item.' ); 
-            }
-            
-            do_action('factory_form_after_element_' . $element->getOption('name') );
-        } 
-        
-        $this->afterRendering();
-    }
+		/**
+		 * The base class for control holders.
+		 *
+		 * @since 1.0.0
+		 */
+		abstract class Wbcr_FactoryForms000_Holder extends Wbcr_FactoryForms000_FormElement {
 
-    /**
-     * Rendering a beginning of a holder.
-     * 
-     * @since 1.0.0
-     * @return void
-     */
-    protected function beforeRendering(){}
-    
-    /**
-     * Rendering an end of a holder.
-     * 
-     * @since 1.0.0
-     * @return void
-     */
-    protected function afterRendering(){}
-    
-    /**
-     * Rendering some html before an inner holder.
-     * 
-     * @since 1.0.0
-     * @return void
-     */
-    protected function beforeInnerHolder(){}
-    
-    /**
-     * Rendering some html after an inner holder.
-     * 
-     * @since 1.0.0
-     * @return void
-     */
-    protected function afterInnerHolder(){}
-    
+			/**
+			 * Holder Elements.
+			 *
+			 * @since 1.0.0
+			 * @var Wbcr_FactoryForms000_Control[]
+			 */
+			protected $elements = array();
 
-    protected function beforeInnerElement(){}
-    
-    /**
-     * Rendering some html after an inner element.
-     * 
-     * @since 1.0.0
-     * @return void
-     */
-    protected function afterInnerElement(){} 
-}
+			/**
+			 * Is this element a control holder?
+			 *
+			 * @since 1.0.0
+			 * @var bool
+			 */
+			public $is_holder = true;
+
+			/**
+			 * Creates a new instance of control holder.
+			 *
+			 * @since 1.0.0
+			 * @param mixed[] $options A holder options.
+			 * @param Wbcr_FactoryForms000_Form $form A parent form.
+			 */
+			public function __construct($options, $form)
+			{
+				parent::__construct($options, $form);
+				$this->elements = $form->createElements($options['items']);
+			}
+
+			/**
+			 * Returns holder elements.
+			 *
+			 * @since 1.0.0
+			 * @return Wbcr_FactoryForms000_Control[].
+			 */
+			public function getElements()
+			{
+				return $this->elements;
+			}
+
+			/**
+			 * Renders the form or a given control holder.
+			 *
+			 * @since 1.0.0
+			 * @return void
+			 */
+			function render()
+			{
+
+				$this->beforeRendering();
+
+				$is_first_item = true;
+
+				foreach($this->elements as $element) {
+
+					$element->setOption('isFirst', $is_first_item);
+
+					if( $is_first_item ) {
+						$is_first_item = false;
+					}
+
+					do_action('wbcr_factory_000_form_before_element_' . $element->getOption('name'));
+
+					// if a current item is a control holder
+					if( $element->is_holder ) {
+
+						$this->form->layout->beforeHolder($element);
+						$element->render();
+						$this->form->layout->afterHolder($element);
+						// if a current item is an input control
+					} elseif( $element->is_control ) {
+						$this->form->layout->beforeControl($element);
+						$element->render();
+						$this->form->layout->afterControl($element);
+						// if a current item is a custom form element
+					} elseif( $element->is_custom ) {
+
+						$element->render();
+						// otherwise, show the error
+					} else {
+						echo('[ERROR] Invalid item.');
+					}
+
+					do_action('wbcr_factory_form_after_element_' . $element->getOption('name'));
+				}
+
+				$this->afterRendering();
+			}
+
+			/**
+			 * Rendering a beginning of a holder.
+			 *
+			 * @since 1.0.0
+			 * @return void
+			 */
+			protected function beforeRendering()
+			{
+			}
+
+			/**
+			 * Rendering an end of a holder.
+			 *
+			 * @since 1.0.0
+			 * @return void
+			 */
+			protected function afterRendering()
+			{
+			}
+
+			/**
+			 * Rendering some html before an inner holder.
+			 *
+			 * @since 1.0.0
+			 * @return void
+			 */
+			protected function beforeInnerHolder()
+			{
+			}
+
+			/**
+			 * Rendering some html after an inner holder.
+			 *
+			 * @since 1.0.0
+			 * @return void
+			 */
+			protected function afterInnerHolder()
+			{
+			}
+
+
+			protected function beforeInnerElement()
+			{
+			}
+
+			/**
+			 * Rendering some html after an inner element.
+			 *
+			 * @since 1.0.0
+			 * @return void
+			 */
+			protected function afterInnerElement()
+			{
+			}
+		}
+	}
