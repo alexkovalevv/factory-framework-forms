@@ -272,7 +272,7 @@
 					do_action('wbcr_factory_forms_000_register_controls', $plugin);
 
 					if( !empty($plugin) ) {
-						do_action('wbcr_factory_forms_register_controls_' . $plugin->getPluginName(), $plugin);
+						do_action('wbcr_factory_forms_000_register_controls_' . $plugin->getPluginName(), $plugin);
 					}
 
 					Wbcr_FactoryForms000_Manager::$controls_registered = true;
