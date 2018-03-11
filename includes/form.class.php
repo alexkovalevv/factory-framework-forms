@@ -650,13 +650,6 @@
 					foreach($values as $keyToSave => $valueToSave) {
 						$this->provider->setValue($keyToSave, $valueToSave);
 					}
-
-					$nameOption = $control->getOption('name') . '_is_active';
-					$isActive = (isset($_POST[$nameOption]) && intval($_POST[$nameOption]) == 0)
-						? 0
-						: 1;
-
-					$this->provider->setValue($nameOption, $isActive);
 				}
 
 				$this->provider->saveChanges();

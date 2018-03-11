@@ -119,7 +119,7 @@
 
 					<?php } else { ?>
 
-						<input type="text" id="<?php echo $name; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>" class="factory-input-text"/>
+						<input type="number" id="<?php echo $name; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>" class="factory-input-text"/>
 						<span class="factory-units"><?php echo $unit ?></span>
 
 					<?php } ?>

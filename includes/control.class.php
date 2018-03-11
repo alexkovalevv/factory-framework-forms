@@ -312,7 +312,6 @@
 			public function render()
 			{
 				$this->addCssClass('factory-from-control-' . $this->type);
-				$is_active = $this->provider->getValue($this->getOption('name') . '_is_active', $this->getOption('is_active', 1));
 
 				// if the control is off, then ignore it
 				$off = $this->getOption('off', false);
@@ -320,11 +319,7 @@
 				if( $off ) {
 					return;
 				}
-
-				?>
-				<input type="hidden" class="factory-control-is-active" name="<?php echo $this->getOption('name') ?>_is_active" value="<?php echo $is_active ?>"/>
-				<?php
-
+				
 				$this->beforeHtml();
 				$this->html();
 				$this->afterHtml();
