@@ -77,10 +77,10 @@
 
 				$fonts = array(
 
-					array('inherit', __('(use default website font)', 'factory_forms_000')),
+					array('inherit', __('(use default website font)', 'wbcr_factory_forms_000')),
 					array(
 						'group',
-						__('Sans Serif:', 'factory_forms_000'),
+						__('Sans Serif:', 'wbcr_factory_forms_000'),
 						array(
 							array('Arial, "Helvetica Neue", Helvetica, sans-serif', 'Arial'),
 							array('"Arial Black", "Arial Bold", Gadget, sans-serif', 'Arial Black'),
@@ -131,7 +131,7 @@
 					),
 					array(
 						'group',
-						__('Serif:', 'factory_forms_000'),
+						__('Serif:', 'wbcr_factory_forms_000'),
 						array(
 							array(
 								'Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif',
@@ -187,7 +187,7 @@
 					),
 					array(
 						'group',
-						__('Monospaced:', 'factory_forms_000'),
+						__('Monospaced:', 'wbcr_factory_forms_000'),
 						array(
 							array('"Andale Mono", AndaleMono, monospace', 'Andale Mono'),
 							array('Consolas, monaco, monospace', 'Consolas'),

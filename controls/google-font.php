@@ -49,12 +49,12 @@
 			$google_fonts = $this->getGoogleFonts();
 
 			$fonts = array(
-				array('inherit', __('(use default website font)', 'factory_forms_000'))
+				array('inherit', __('(use default website font)', 'wbcr_factory_forms_000'))
 			);
 
 			$fontsCommon = array(
 				'group',
-				__('Standard:', 'factory_forms_000'),
+				__('Standard:', 'wbcr_factory_forms_000'),
 				array(
 
 					array('Arial, "Helvetica Neue", Helvetica, sans-serif', 'Arial'),
@@ -65,7 +65,7 @@
 				)
 			);
 
-			$fontsGoogleFonts = array('group', __('Google Fonts:', 'factory_forms_000'), array());
+			$fontsGoogleFonts = array('group', __('Google Fonts:', 'wbcr_factory_forms_000'), array());
 
 			foreach($google_fonts->items as $item) {
 
@@ -115,7 +115,7 @@
 
 			if( is_wp_error($response) ) {
 
-				$this->error = __('Unable to retrieve the list of Google Fonts.', 'factory_forms_000');
+				$this->error = __('Unable to retrieve the list of Google Fonts.', 'wbcr_factory_forms_000');
 				$this->defailed_error = $response->get_error_message();
 
 				return $body;
@@ -123,7 +123,7 @@
 
 			if( !isset($response['body']) ) {
 
-				$this->error = __('Invalide response from the Google Fonts API.', 'factory_forms_000');
+				$this->error = __('Invalide response from the Google Fonts API.', 'wbcr_factory_forms_000');
 				$this->defailed_error = $response['body'];
 
 				return $body;
@@ -133,7 +133,7 @@
 
 			if( empty($body->items) ) {
 
-				$this->error = __('Unexpected error. The list of Google Fonts are empty.', 'factory_forms_000');
+				$this->error = __('Unexpected error. The list of Google Fonts are empty.', 'wbcr_factory_forms_000');
 
 				return $body;
 			}

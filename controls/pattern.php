@@ -102,19 +102,19 @@
 						</div>
 						<a href="#" class="button button-default factory-button factory-change-color-btn <?php if( $hasColor ) {
 							echo 'button-active';
-						} ?>" title="<?php _e('Change color', 'factory_forms_000') ?>">
+						} ?>" title="<?php _e('Change color', 'wbcr_factory_forms_000') ?>">
 							<i class="fa fa-flask"></i>
-							<span><?php _e('re-color', 'factory_forms_000') ?></span>
+							<span><?php _e('re-color', 'wbcr_factory_forms_000') ?></span>
 						</a>
 						<input type="hidden" id="<?php echo $name[0]; ?>" name="<?php echo $name[0]; ?>" value="<?php echo esc_url($values['url']); ?>" class="factory-pattern-result">
 						<input type="hidden" id="<?php echo $name[1]; ?>" name="<?php echo $name[1]; ?>" value="<?php echo esc_attr($values['color']); ?>" class="factory-color-result">
 					</div>
 					<div class="factory-color-panel">
 						<div class="factory-color-wrap">
-							<span class="factory-color-label"><?php _e('Select color:', 'factory_forms_000') ?></span>
+							<span class="factory-color-label"><?php _e('Select color:', 'wbcr_factory_forms_000') ?></span>
 							<?php $this->color->html() ?>
 							<div class="factory-hint">
-								<i><?php _e('Changing the color may takes a minute or more. Please be patient.', 'factory_forms_000') ?></i>
+								<i><?php _e('Changing the color may takes a minute or more. Please be patient.', 'wbcr_factory_forms_000') ?></i>
 							</div>
 						</div>
 						<div class="factory-picker-target"></div>

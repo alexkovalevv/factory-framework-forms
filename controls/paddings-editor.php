@@ -67,7 +67,7 @@
 					</div>
 					<div class="factory-slider-container">
 						<label class="factory-title">
-							<?php _e('Select a side and move the slider to set up:', 'factory_forms_000') ?>
+							<?php _e('Select a side and move the slider to set up:', 'wbcr_factory_forms_000') ?>
 						</label>
 
 						<div class="factory-slider">

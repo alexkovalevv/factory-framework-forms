@@ -46,7 +46,7 @@
 	 * We add this code into the hook because all these controls quite heavy. So in order to get better perfomance,
 	 * we load the form controls only on pages where the forms are created.
 	 *
-	 * @see the 'factory_forms_000_register_controls' hook
+	 * @see the 'wbcr_factory_forms_000_register_controls' hook
 	 *
 	 * @since 3.0.7
 	 */
