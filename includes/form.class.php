@@ -262,18 +262,18 @@
 			 *
 			 * @since 1.0.0
 			 * @param array $options
-			 * @param Wbcr_Factory000_Plugin|null $plugin
+			 * @param Wbcr_Factory000_Plugin $plugin
 			 */
-			public function __construct($options = array(), $plugin = null)
+			public function __construct(array $options = array(), Wbcr_Factory000_Plugin $plugin)
 			{
 				// register controls once, when the first form is created
 				if( !Wbcr_FactoryForms000_Manager::$controls_registered ) {
 
 					do_action('wbcr_factory_forms_000_register_controls', $plugin);
 
-					if( !empty($plugin) ) {
-						do_action('wbcr_factory_forms_000_register_controls_' . $plugin->getPluginName(), $plugin);
-					}
+					//if( !empty($plugin) ) {
+					do_action('wbcr_factory_forms_000_register_controls_' . $plugin->getPluginName(), $plugin);
+					//}
 
 					Wbcr_FactoryForms000_Manager::$controls_registered = true;
 				}

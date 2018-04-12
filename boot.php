@@ -56,7 +56,7 @@
 		 * @param Wbcr_Factory000_Plugin $plugin
 		 * @throws Exception
 		 */
-		function wbcr_factory_forms_000_register_default_controls($plugin)
+		function wbcr_factory_forms_000_register_default_controls(Wbcr_Factory000_Plugin $plugin)
 		{
 
 			if( $plugin && !isset($plugin->forms) ) {
