@@ -36,15 +36,20 @@
 			{
 				$name_on_form = $this->getNameOnForm($name);
 
-				$value = isset($_POST[$name_on_form])
+				$raw_value = isset($_POST[$name_on_form])
 					? $_POST[$name_on_form]
 					: null;
 
+				$value = $raw_value;
+
 				if( is_array($value) ) {
+					$value = array_map('sanitize_textarea_field', $value);
 					$value = implode(',', $value);
+				} else {
+					$value = sanitize_textarea_field($value);
 				}
 
-				return sanitize_textarea_field($value);
+				return $this->filterValue($value, $raw_value);
 			}
 
 			/**

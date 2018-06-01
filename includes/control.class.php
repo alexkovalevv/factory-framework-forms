@@ -189,18 +189,41 @@
 			 */
 			public function getSubmitValue($name, $sub_name)
 			{
-				$nameOnForm = $this->getNameOnForm($name);
+				$name_on_form = $this->getNameOnForm($name);
 
-				$value = isset($_POST[$nameOnForm])
-					? $_POST[$nameOnForm]
+				$raw_value = isset($_POST[$name_on_form])
+					? $_POST[$name_on_form]
 					: null;
 
+				$value = $raw_value;
+
 				if( is_array($value) ) {
+					$value = array_map('sanitize_textarea_field', $value);
 					$value = implode(',', $value);
+				} else {
+					$value = sanitize_text_field($value);
 				}
 
-				return sanitize_text_field($value);
+				return $this->filterValue($value, $raw_value);
 			}
+
+			/**
+			 * @param $value
+			 * @param $raw_value
+			 * @return mixed
+			 */
+			protected function filterValue($value, $raw_value)
+			{
+				$sanitize_func = $this->getOption('filter_value');
+
+				// if the data options is a valid callback for an object method
+				if( !empty($sanitize_func) && ((is_array($sanitize_func) && count($sanitize_func) == 2 && gettype($sanitize_func[0]) == 'object') || function_exists($sanitize_func)) ) {
+					return call_user_func_array($sanitize_func, array($value, $raw_value));
+				}
+
+				return $value;
+			}
+
 
 			/**
 			 * Returns an array of value to save received after submission of a form.
