@@ -79,14 +79,5 @@
 				<?php if( $units ) { ?></div><?php } ?>
 			<?php
 			}
-
-			public function getSubmitValue($name, $subName)
-			{
-				$name_on_form = $this->getNameOnForm($name);
-
-				return isset($_POST[$name_on_form])
-					? sanitize_text_field($_POST[$name_on_form])
-					: '';
-			}
 		}
 	}

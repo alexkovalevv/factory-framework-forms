@@ -198,7 +198,7 @@
 				$value = $raw_value;
 
 				if( is_array($value) ) {
-					$value = array_map('sanitize_textarea_field', $value);
+					$value = array_map('sanitize_text_field', $value);
 					$value = implode(',', $value);
 				} else {
 					$value = sanitize_text_field($value);
