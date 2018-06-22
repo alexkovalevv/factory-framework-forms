@@ -249,6 +249,12 @@
 			 */
 			public $layout;
 
+			/**
+			 * Is for all sites?
+			 *
+			 * @var bool
+			 */
+			public $all_sites = false;
 
 			/**
 			 * Creates a new instance of a form.
@@ -284,6 +290,9 @@
 				$this->name = isset($options['name'])
 					? $options['name']
 					: $this->name;
+				$this->all_sites = isset($options['all_sites'])
+					? $options['all_sites']
+					: false;
 
 				if( isset($options['formLayout']) ) {
 					$this->form_layout = $options['formLayout'];
@@ -635,7 +644,6 @@
 			 * Saves form data by using a specified value provider.
 			 *
 			 * @since 1.0.0
-			 * @return mixed
 			 */
 			public function save()
 			{
@@ -652,7 +660,24 @@
 					}
 				}
 
-				$this->provider->saveChanges();
+				if ( $this->all_sites ) {
+					$sites = get_sites( array(
+						'archived' => 0,
+						'mature'   => 0,
+						'spam'     => 0,
+						'deleted'  => 0,
+					) );
+
+					foreach ( $sites as $site ) {
+						switch_to_blog( $site->blog_id );
+
+						$this->provider->saveChanges();
+
+						restore_current_blog();
+					}
+				} else {
+					$this->provider->saveChanges();
+				}
 			}
 
 			/**
