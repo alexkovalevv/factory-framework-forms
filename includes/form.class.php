@@ -652,13 +652,6 @@
 				}
 
 				$controls = $this->getControls();
-				foreach($controls as $control) {
-
-					$values = $control->getValuesToSave();
-					foreach($values as $keyToSave => $valueToSave) {
-						$this->provider->setValue($keyToSave, $valueToSave);
-					}
-				}
 
 				if ( $this->all_sites ) {
 					$sites = get_sites( array(
@@ -671,11 +664,28 @@
 					foreach ( $sites as $site ) {
 						switch_to_blog( $site->blog_id );
 
+						foreach($controls as $control) {
+							$values = $control->getValuesToSave();
+
+							foreach ( $values as $keyToSave => $valueToSave ) {
+								$valueToSave = WbcrFactoryClearfy000_Helpers::replaceMsUrl( $valueToSave );
+								$this->provider->setValue( $keyToSave, $valueToSave );
+							}
+						}
+
 						$this->provider->saveChanges();
 
 						restore_current_blog();
 					}
 				} else {
+					foreach($controls as $control) {
+						$values = $control->getValuesToSave();
+
+						foreach($values as $keyToSave => $valueToSave) {
+							$this->provider->setValue($keyToSave, $valueToSave);
+						}
+					}
+
 					$this->provider->saveChanges();
 				}
 			}
