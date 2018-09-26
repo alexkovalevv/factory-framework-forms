@@ -249,6 +249,12 @@
 			 */
 			public $layout;
 
+			/**
+			 * Is for all sites?
+			 *
+			 * @var bool
+			 */
+			public $all_sites = false;
 
 			/**
 			 * Creates a new instance of a form.
@@ -284,6 +290,9 @@
 				$this->name = isset($options['name'])
 					? $options['name']
 					: $this->name;
+				$this->all_sites = isset($options['all_sites'])
+					? $options['all_sites']
+					: false;
 
 				if( isset($options['formLayout']) ) {
 					$this->form_layout = $options['formLayout'];
@@ -635,7 +644,6 @@
 			 * Saves form data by using a specified value provider.
 			 *
 			 * @since 1.0.0
-			 * @return mixed
 			 */
 			public function save()
 			{
@@ -644,15 +652,42 @@
 				}
 
 				$controls = $this->getControls();
-				foreach($controls as $control) {
 
-					$values = $control->getValuesToSave();
-					foreach($values as $keyToSave => $valueToSave) {
-						$this->provider->setValue($keyToSave, $valueToSave);
+				if ( $this->all_sites ) {
+					$sites = get_sites( array(
+						'archived' => 0,
+						'mature'   => 0,
+						'spam'     => 0,
+						'deleted'  => 0,
+					) );
+
+					foreach ( $sites as $site ) {
+						switch_to_blog( $site->blog_id );
+
+						foreach($controls as $control) {
+							$values = $control->getValuesToSave();
+
+							foreach ( $values as $keyToSave => $valueToSave ) {
+								$valueToSave = WbcrFactoryClearfy000_Helpers::replaceMsUrl( $valueToSave );
+								$this->provider->setValue( $keyToSave, $valueToSave );
+							}
+						}
+
+						$this->provider->saveChanges();
+
+						restore_current_blog();
 					}
-				}
+				} else {
+					foreach($controls as $control) {
+						$values = $control->getValuesToSave();
 
-				$this->provider->saveChanges();
+						foreach($values as $keyToSave => $valueToSave) {
+							$this->provider->setValue($keyToSave, $valueToSave);
+						}
+					}
+
+					$this->provider->saveChanges();
+				}
 			}
 
 			/**
