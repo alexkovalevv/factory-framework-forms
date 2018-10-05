@@ -245,16 +245,9 @@
 			 * A current form layout used to render a form.
 			 *
 			 * @since 1.0.0
-			 * @var FactoryForms000_FormLayout
+			 * @var Wbcr_FactoryForms000_FormLayout
 			 */
 			public $layout;
-
-			/**
-			 * Is for all sites?
-			 *
-			 * @var bool
-			 */
-			public $all_sites = false;
 
 			/**
 			 * Creates a new instance of a form.
@@ -284,15 +277,11 @@
 					Wbcr_FactoryForms000_Manager::$controls_registered = true;
 				}
 
-				$this->scope = isset($options['scope'])
-					? $options['scope']
-					: null;
-				$this->name = isset($options['name'])
-					? $options['name']
-					: $this->name;
-				$this->all_sites = isset($options['all_sites'])
+				$this->scope = isset($options['scope']) ? $options['scope'] : null;
+				$this->name = isset($options['name']) ? $options['name'] : $this->name;
+				/*$this->all_sites = isset($options['all_sites'])
 					? $options['all_sites']
-					: false;
+					: false;*/
 
 				if( isset($options['formLayout']) ) {
 					$this->form_layout = $options['formLayout'];
@@ -371,9 +360,7 @@
 
 			public function createControls($holder = null)
 			{
-				$items = ($holder == null)
-					? $this->getItems()
-					: $holder['items'];
+				$items = ($holder == null) ? $this->getItems() : $holder['items'];
 
 				foreach($items as $item) {
 
@@ -504,7 +491,7 @@
 			 *
 			 * @since 1.0.0
 			 * @param mixed $item Item data.
-			 * @return FactoryForms000_FormElement A custom form element object.
+			 * @return Wbcr_FactoryForms000_FormElement A custom form element object.
 			 */
 			public function createCustomElement($item)
 			{
@@ -653,41 +640,15 @@
 
 				$controls = $this->getControls();
 
-				if ( $this->all_sites ) {
-					$sites = get_sites( array(
-						'archived' => 0,
-						'mature'   => 0,
-						'spam'     => 0,
-						'deleted'  => 0,
-					) );
+				foreach($controls as $control) {
+					$values = $control->getValuesToSave();
 
-					foreach ( $sites as $site ) {
-						switch_to_blog( $site->blog_id );
-
-						foreach($controls as $control) {
-							$values = $control->getValuesToSave();
-
-							foreach ( $values as $keyToSave => $valueToSave ) {
-								$valueToSave = WbcrFactoryClearfy000_Helpers::replaceMsUrl( $valueToSave );
-								$this->provider->setValue( $keyToSave, $valueToSave );
-							}
-						}
-
-						$this->provider->saveChanges();
-
-						restore_current_blog();
+					foreach($values as $keyToSave => $valueToSave) {
+						$this->provider->setValue($keyToSave, $valueToSave);
 					}
-				} else {
-					foreach($controls as $control) {
-						$values = $control->getValuesToSave();
-
-						foreach($values as $keyToSave => $valueToSave) {
-							$this->provider->setValue($keyToSave, $valueToSave);
-						}
-					}
-
-					$this->provider->saveChanges();
 				}
+
+				$this->provider->saveChanges();
 			}
 
 			/**
