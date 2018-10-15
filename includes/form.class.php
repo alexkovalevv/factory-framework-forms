@@ -643,8 +643,8 @@
 				foreach($controls as $control) {
 					$values = $control->getValuesToSave();
 
-					foreach($values as $keyToSave => $valueToSave) {
-						$this->provider->setValue($keyToSave, $valueToSave);
+					foreach($values as $key_to_save => $value_to_save) {
+						$this->provider->setValue($key_to_save, $value_to_save);
 					}
 				}
 

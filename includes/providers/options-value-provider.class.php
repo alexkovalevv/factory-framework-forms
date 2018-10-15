@@ -25,20 +25,20 @@
 		class Wbcr_FactoryForms000_OptionsValueProvider implements Wbcr_IFactoryForms000_ValueProvider {
 
 			/**
-			 * Values to save $optionName => $optionValue
-			 *
-			 * @since 1.0.0
-			 * @var mixed[]
-			 */
-			private $values = array();
-
-			/**
 			 * A prefix that will be added to all option names.
 			 *
 			 * @since 1.0.0
 			 * @var string
 			 */
 			public $scope;
+
+			/**
+			 * Values to save $optionName => $optionValue
+			 *
+			 * @since 1.0.0
+			 * @var mixed[]
+			 */
+			private $values = array();
 
 			/**
 			 * Creates a new instance of an options value provider.
@@ -61,12 +61,14 @@
 			 */
 			public function saveChanges()
 			{
-				$this->plugin->updateOptions($this->values);
+				foreach((array)$this->values as $option_name => $option_value) {
+					$this->plugin->updatePopulateOption($option_name, $option_value);
+				}
 			}
 
 			public function getValue($name, $default = null, $multiple = false)
 			{
-				$value = $this->plugin->getOption($name, $default);
+				$value = $this->plugin->getPopulateOption($name, $default);
 
 				if( $value === 'true' || $value === true ) {
 					$value = 1;
