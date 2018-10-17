@@ -28,6 +28,8 @@
 
 	define('FACTORY_FORMS_000_LOADED', true);
 
+	define('FACTORY_FORMS_000_VERSION', '4.0.9');
+
 	// absolute path and URL to the files and resources of the module.
 	define('FACTORY_FORMS_000_DIR', dirname(__FILE__));
 	define('FACTORY_FORMS_000_URL', plugins_url(null, __FILE__));
